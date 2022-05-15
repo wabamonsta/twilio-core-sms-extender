@@ -60,7 +60,10 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         );
         if (twl_send_sms($args)) {
             if (isset($redirect) && $redirect != null) {
-                $url = get_site_url() . "/thank-you";
+                $url = $redirect;
+                wp_redirect($url);
+            } else {
+                $url = get_site_url();
                 wp_redirect($url);
             }
         }
