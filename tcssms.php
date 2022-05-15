@@ -1,0 +1,88 @@
+<?php
+
+/**
+ 
+ * @package twilioCoreSMSExtender
+ 
+ */
+
+/*
+ 
+Plugin Name: Twilio Core SMS Extender
+Plugin URI:  https://github.com/wabamonsta
+Description: SMS is a plugin used to send text message to users with link to download page
+Version: 1.0.7
+Author: Jermaine Byfield
+Author URI: https://github.com/wabamonsta
+License: GPLv2 or later
+ 
+*/
+
+//Check if twillio core is a active plugin
+$wp_twillio = 0;
+define('sms_currentDir', plugin_dir_url(__FILE__));
+$active_plugins = apply_filters('active_plugins', get_option('active_plugins'));
+if (in_array('wp-twilio-core/core.php', $active_plugins)) {
+    // Plugin is active
+    $wp_twillio = 1;
+} else {
+
+    function tcs_sms_admin_notice()
+    {
+        echo "<div class='notice notice-error is-dismissible'>Twilio Core plugin is required in order to use tcs SMS plugin</div>";
+    }
+    add_action('admin_notices', 'tcs_sms_admin_notice');
+}
+
+
+function wp_sms_tel_assets()
+{
+    wp_enqueue_style('telephone-mask', sms_currentDir . "/css/intlTelInput.css");
+    wp_enqueue_script('script', sms_currentDir . "/js/intlTelInput-jquery.min.js", array('jquery'));
+}
+add_action('wp_enqueue_scripts', 'wp_sms_tel_assets');
+
+function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
+{
+    $active_plugins = apply_filters('active_plugins', get_option('active_plugins'));
+    if (!in_array('wp-twilio-core/core.php', $active_plugins)) {
+        echo   tcs_sms_admin_notice();
+        exit;
+    }
+
+    extract($atts);
+
+    if (isset($_POST['sms_num']) && $_POST['sms_num'] != null) {
+        // Send message 
+        $args = array(
+            'number_to' => $_POST['sms_num'],
+            'message' => $message,
+        );
+        if (twl_send_sms($args)) {
+            if (isset($redirect) && $redirect != null) {
+                $url = get_site_url() . "/thank-you";
+                wp_redirect($url);
+            }
+        }
+    }
+    return   '
+        <form method="post" >
+        <div><input type="tel" placeholder="" id="tcs_telephone" name="sms_num"></div>
+        <div><input type="submit" value="' . $buttonvalue . '" ></div>
+        </form>
+        <script>
+        jQuery(document).ready(function(){
+        jQuery("#tcs_telephone").intlTelInput({
+            allowDropdown:true,
+            autoPlaceholder:"polite",
+            geoIpLookup:true,
+
+            utilsScript:"' . sms_currentDir . '/js/util.js' . '"
+
+        });
+        });
+            
+        </script>
+    ';
+}
+add_shortcode('tcs_sms', 'tcs_sms_shortcode');

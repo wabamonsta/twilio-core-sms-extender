@@ -1,0 +1,4 @@
+# Log files
+*.log
+#MAC FILE
+.DS_Store
