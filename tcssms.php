@@ -77,8 +77,15 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         jQuery(document).ready(function(){
         jQuery("#tcs_telephone").intlTelInput({
             allowDropdown:true,
+            separateDialCode:true,
             autoPlaceholder:"polite",
-            geoIpLookup:true,
+            initialCountry: "auto",
+            geoIpLookup: function(success, failure) {
+                jQuery.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                  var countryCode = (resp && resp.country) ? resp.country : "us";
+                  success(countryCode);
+                });
+              },
 
             utilsScript:"' . sms_currentDir . '/js/util.js' . '"
 
