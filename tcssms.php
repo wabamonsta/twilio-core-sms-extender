@@ -54,8 +54,13 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
 
     if (isset($_POST['sms_num']) && $_POST['sms_num'] != null) {
         // Send message 
+        if(strpos($_POST['sms_num'],$_POST['countrycode'],-7)!==false){
+            $number = $_POST['sms_num'];
+        }else{
+        $number =  $_POST['countrycode'].$_POST['sms_num'];
+        }
         $args = array(
-            'number_to' => $_POST['sms_num'],
+            'number_to' =>$number,
             'message' => $message,
         );
         if (twl_send_sms($args)) {
@@ -69,12 +74,17 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         }
     }
     return   '
-        <form method="post" >
+        <form method="post" id="tc_sms" >
+        <input type="hidden" id="countrycode" name="countrycode">
         <div><input type="tel" placeholder="" id="tcs_telephone" name="sms_num"></div>
         <div><input type="submit" value="' . $buttonvalue . '" ></div>
         </form>
         <script>
         jQuery(document).ready(function(){
+        jQuery("#tcs_telephone").on("blur focus",function(){
+            var str = jQuery(".selected-dial-code").val();
+            jQuery("#countrycode").val(str.replace("+",""));
+        })
         jQuery("#tcs_telephone").intlTelInput({
             allowDropdown:true,
             separateDialCode:true,
