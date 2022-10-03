@@ -60,7 +60,7 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         $number =  $_POST['countrycode'].$_POST['sms_num'];
         }
         $args = array(
-            'number_to' =>$number,
+            'number_to' =>"+".$number,
             'message' => $message,
         );
         if (twl_send_sms($args)) {
@@ -82,7 +82,7 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         <script>
         jQuery(document).ready(function(){
         jQuery("#tcs_telephone").on("blur focus",function(){
-            var str = jQuery(".selected-dial-code").val();
+            var str = jQuery(".iti__selected-dial-code").html();
             jQuery("#countrycode").val(str.replace("+",""));
         })
         jQuery("#tcs_telephone").intlTelInput({
@@ -97,7 +97,7 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
                 });
               },
 
-            utilsScript:"' . sms_currentDir . '/js/util.js' . '"
+            utilsScript:"' . sms_currentDir . '/js/utils.js' . '"
 
         });
         });
