@@ -11,7 +11,7 @@
 Plugin Name: Twilio Core SMS Extender
 Plugin URI:  https://github.com/wabamonsta
 Description: SMS is a plugin used to send text message to users with link to download page
-Version: 1.0.8
+Version: 1.0.7
 Author: Jermaine Byfield
 Author URI: https://github.com/wabamonsta
 License: GPLv2 or later
@@ -54,12 +54,11 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
 
     if (isset($_POST['sms_num']) && $_POST['sms_num'] != null) {
         // Send message 
-        // if(strpos($_POST['sms_num'],$_POST['countrycode'],-7)!==false){
-        //     $number = $_POST['sms_num'];
-        // }else{
-        
-        // }
+     /*   if(strpos($_POST['sms_num'],$_POST['countrycode'],-7)!==false){
+            $number = $_POST['sms_num'];
+        }else{*/
         $number =  $_POST['countrycode'].$_POST['sms_num'];
+       /* } */
         $args = array(
             'number_to' =>$number,
             'message' => $message,
