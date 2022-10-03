@@ -81,8 +81,9 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         </form>
         <script>
         jQuery(document).ready(function(){
-        jQuery("#tcs_telephone").on("blur focus",function(){
+        jQuery("#tcs_telephone").on("blur focus keyup",function(){
             var str = jQuery(".selected-dial-code").html();
+            console.log("countrycode: "+str);
             jQuery("#countrycode").val(str);
         })
         jQuery("#tcs_telephone").intlTelInput({
