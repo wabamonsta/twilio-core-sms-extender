@@ -82,7 +82,7 @@ function tcs_sms_shortcode($atts = array(), $content = null, $tag = '')
         <script>
         jQuery(document).ready(function(){
         jQuery("#tcs_telephone").on("blur focus keyup",function(){
-            var str = jQuery(".iti-sdc-2 .selected-dial-code").html();
+            var str = jQuery(".selected-dial-code:last-child").html();
             console.log("countrycode: "+str);
             jQuery("#countrycode").val(str);
         })
